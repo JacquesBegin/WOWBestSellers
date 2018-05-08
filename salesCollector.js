@@ -3,6 +3,11 @@ const fs = require("fs");
 
 require('dotenv').config();
 
+// TODO: Make object for retrieved data with properties for:
+// url: url of json data, lastModified: time of last AH data
+// update, processTime: time it took to download the json
+// data, ahData: json data of ah records
+
 
 var url = `https://us.api.battle.net/wow/auction/data/thrall?locale=en_US&apikey=${process.env.API_KEY}`;
 // var url = `https://us.api.battle.net/wow/item/18803?locale=en_US&apikey=${process.env.API_KEY}`;

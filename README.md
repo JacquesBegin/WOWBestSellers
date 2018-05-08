@@ -7,6 +7,7 @@ A feature missing from the auction house experience is the ability to see what i
 *** For this application to work, developers must add a .env file with the following variable defined: API_KEY=addKeyHere
 *** In the above statement, you must replace "addKeyHere" with the API key received from the Blizzard Developers Site
 *** Blizzard Developers Site - https://dev.battle.net/
+*** Make sure the .env file is added to the .gitignore file so that it does not get saved in the public repository.
 
 
 

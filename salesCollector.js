@@ -1,8 +1,11 @@
 const request = require("request");
 const fs = require("fs");
 
-var url = "https://us.api.battle.net/wow/auction/data/thrall?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u";
-// var url = "https://us.api.battle.net/wow/item/18803?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u";
+require('dotenv').config();
+
+
+var url = `https://us.api.battle.net/wow/auction/data/thrall?locale=en_US&apikey=${process.env.API_KEY}`;
+// var url = `https://us.api.battle.net/wow/item/18803?locale=en_US&apikey=${process.env.API_KEY}`;
 
 request(
   {
@@ -15,8 +18,6 @@ request(
       // and only pull data if the content has been
       // modified.
       // if (body.lastModified !== XXXXXX.timeStamp)
-
-      // console.log("url", (body.files[0].url).toString());
 
       request(
         {

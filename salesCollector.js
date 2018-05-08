@@ -25,9 +25,9 @@ request(
           // url: url,
           json: true
         }, function (err, res, data) {
-          console.log("secondBody: ", data)
+          // console.log("secondBody: ", data)
           if (!err & res.statusCode === 200) {
-            console.log("passed");
+            console.log("passed loading");
             var currentAHData = JSON.stringify(data);
             var filename = `${__dirname}/ahData/AHData_${Date.now()}.json`;
             fs.writeFile(filename, currentAHData, (err) => {

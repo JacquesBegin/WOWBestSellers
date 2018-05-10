@@ -55,6 +55,13 @@ module.exports = {
                   petLevel int,
                   petQualityId int
                   );
+                  CREATE TABLE recipe (
+                  id SERIAL primary key,
+                  recipeId int,
+                  name text,
+                  profession text,
+                  icon text
+                  );
                   `
   }
 }

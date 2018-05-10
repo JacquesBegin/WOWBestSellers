@@ -28,7 +28,8 @@ module.exports = {
 
   queries: {
     dropTables: `DROP TABLE IF EXISTS ahRecord;
-                DROP TABLE IF EXISTS ahDump;`,
+                DROP TABLE IF EXISTS ahDump;
+                DROP TABLE IF EXISTS recipe;`,
     createTables: `CREATE TABLE ahDump (
                   id SERIAL primary key,
                   url text,

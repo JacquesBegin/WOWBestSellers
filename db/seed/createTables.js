@@ -27,38 +27,38 @@ module.exports = {
   },
 
   queries: {
-    dropTables: `DROP TABLE IF EXISTS ahRecord;
-                DROP TABLE IF EXISTS ahDump;
+    dropTables: `DROP TABLE IF EXISTS ahrecord;
+                DROP TABLE IF EXISTS ahdump;
                 DROP TABLE IF EXISTS recipe;`,
-    createTables: `CREATE TABLE ahDump (
+    createTables: `CREATE TABLE ahdump (
                   id SERIAL primary key,
                   url text,
-                  lastModified int,
-                  createDate int,
-                  downloadDuration int
+                  lastmodified int,
+                  createdate int,
+                  downloadduration int
                   );
-                  CREATE TABLE ahRecord (
+                  CREATE TABLE ahrecord (
                   id SERIAL primary key,
-                  groupId int references ahDump(id),
-                  auctionId int,
+                  groupid int references ahdump(id),
+                  auctionid int,
                   item int,
                   owner text,
-                  ownerRealm text,
+                  ownerrealm text,
                   bid int,
                   buyout int,
                   quantity int,
-                  timeLeft int,
+                  timeleft text,
                   rand int,
                   seed int,
                   context int,
-                  petSpeciesId int,
-                  petBreedId int,
-                  petLevel int,
-                  petQualityId int
+                  petspeciesid int,
+                  petbreedid int,
+                  petlevel int,
+                  petqualityid int
                   );
                   CREATE TABLE recipe (
                   id SERIAL primary key,
-                  recipeId int,
+                  recipeid int,
                   name text,
                   profession text,
                   icon text

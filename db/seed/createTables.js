@@ -49,7 +49,11 @@ module.exports = {
                   timeLeft int,
                   rand int,
                   seed int,
-                  context int
+                  context int,
+                  petSpeciesId int,
+                  petBreedId int,
+                  petLevel int,
+                  petQualityId int
                   );
                   `
   }

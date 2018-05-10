@@ -8,7 +8,7 @@ module.exports = {
   createTables: function(client) {
     
     client.connect((err) => {
-      if(!err) {
+      if(err) {
         console.log(err);
       } else {
         client.query(`${this.queries.dropTables} 

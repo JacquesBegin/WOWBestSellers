@@ -12,10 +12,10 @@ data, ahData: json data of ah records
 // the phrase "ah" is used to refer to auction house
 
 // url to Blizzard API for Thrall server ah information 
-var url = `https://us.api.battle.net/wow/auction/data/thrall?locale=en_US&apikey=${process.env.API_KEY}`;
+const url = `https://us.api.battle.net/wow/auction/data/thrall?locale=en_US&apikey=${process.env.API_KEY}`;
 
 // url to Blizzard API for Alterac Mountains server ah information 
-// var url = `https://us.api.battle.net/wow/auction/data/alterac%20mountains?locale=en_US&apikey=${process.env.API_KEY}`;
+// const url = `https://us.api.battle.net/wow/auction/data/alterac%20mountains?locale=en_US&apikey=${process.env.API_KEY}`;
 
 
 retrieveAHData = (serverUrl) => {
@@ -75,9 +75,31 @@ retrieveAHData = (serverUrl) => {
   );
 };
 
-retrieveAHData(url);
-
 // setInterval(() => {
 //   console.log("time running");
 // }, 1500);
 
+// retrieveAHData(url);
+
+
+
+const bossURL = `https://us.api.battle.net/wow/boss/24723?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u`;
+
+
+retrieveBossEncounter = (bossURL) => {
+  request(
+    {
+      url: bossURL,
+      json: true
+    }, function (err, res, body) {
+      if (!err & res.statusCode === 200) {
+        // console.log("RES-Encounter Data: ", res.body);
+        // console.log("BODY-Encounter Data: ", body);
+        console.log(typeof body);
+        
+      }
+    }
+  );
+}
+
+retrieveBossEncounter(bossURL);

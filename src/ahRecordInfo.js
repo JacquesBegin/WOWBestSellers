@@ -6,9 +6,7 @@ var auctionCount = ahData.auctions.length;
 var allAuctionProperties = {};
 var scanCount = 0;
 
-console.log("Auction Count: ", auctionCount);
-
-// for (var i = 0; i < auctionCount; i++) {
+// used to find all possible properties of an auction object
 for (var i = 0; i < auctionCount; i++) {
   for (var prop in ahData.auctions[i]) {
     if (ahData.auctions[0].hasOwnProperty(prop)) {
@@ -22,6 +20,6 @@ for (var i = 0; i < auctionCount; i++) {
 }
 
 console.log("allAuctionProperties: ", allAuctionProperties);
-console.log("Scan Count: ", scanCount);
+console.log("Total Auctions Scanned: ", scanCount);
 
 

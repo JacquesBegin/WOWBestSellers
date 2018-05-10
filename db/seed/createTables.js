@@ -9,6 +9,8 @@ module.exports = {
     
     client.connect((err) => {
       if(!err) {
+        console.log(err);
+      } else {
         client.query(`${this.queries.dropTables} 
                       ${this.queries.createTables}`, 
                       (err, result) => {
@@ -19,8 +21,6 @@ module.exports = {
                         }
                         client.end();
                       });
-      } else {
-        console.log(err);
       }
     });
 

@@ -33,6 +33,7 @@ module.exports = {
                   id SERIAL primary key,
                   url text,
                   lastModified int,
+                  createDate int,
                   downloadDuration int
                   );
                   CREATE TABLE ahRecord (

@@ -54,6 +54,7 @@ retrieveAHData = (serverUrl) => {
   
               ahDownloadData.downloadElapsedTimeMilliseconds = downloadElapsedTimeMilliseconds;
               ahDownloadData.ahData = data;
+              ahDownloadData.createDate = downloadStartTime;
               ahDownloadData.filename = filename;
   
               var currentAHData = JSON.stringify(ahDownloadData);

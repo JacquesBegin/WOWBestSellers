@@ -8,18 +8,17 @@ module.exports = {
         context, petSpeciesId, petBreedId, petLevel,
         petQualityId) VALUES
         (null, ${record.auc}, ${record.item}, 
-        '${record.owner}', '${record.ownerRealm}',
-        ${record.bid}, ${record.buyout}, ${record.quantity},
-        '${record.timeLeft}', ${record.rand}, ${record.seed},
-        ${record.context}, ${record.petSpeciesId}, 
-        ${record.petBreedId}, ${record.petLevel}, 
-        ${record.petQualityId});
+        '${record.owner || null}', '${record.ownerRealm || null}',
+        ${record.bid || null}, ${record.buyout || null}, ${record.quantity || null},
+        '${record.timeLeft || null}', ${record.rand || null}, ${record.seed || null},
+        ${record.context || null}, ${record.petSpeciesId || null}, 
+        ${record.petBreedId || null}, ${record.petLevel || null}, 
+        ${record.petQualityId || null});
         `;
 
     client.connect((err) => {
       if(!err) {
-        client.query(`${this.queries.dropTables} 
-                      ${this.queries.createTables}`, 
+        client.query(`${insertStatement}}`, 
                       (err, result) => {
                         if(err) {
                           console.log(err);

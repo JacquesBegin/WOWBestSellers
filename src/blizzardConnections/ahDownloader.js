@@ -109,16 +109,14 @@ retrieveBossEncounter = (bossURL) => {
       if (!err & res.statusCode === 200) {
         console.log("BODY-Encounter Data: ", body);
 
-        db.connectToPool();
-
-        // check if boss already exists in database
+        // Check if boss already exists in database
         var newExistsQuery = {};
         newExistsQuery.queryText = 'SELECT EXISTS (SELECT true FROM bossencounter WHERE bossid = $1);';
         newExistsQuery.queryValues = [body.id];
         newExistsQuery.queryCallback = function(err, result) {
           if (!result.rows[0].exists) {
 
-            // if boss does not exist in db add it
+            // If boss does not exist in db then insert it
             var newInsertQuery = {};
             newInsertQuery.queryText = 'INSERT INTO bossencounter(bossid, name, description) VALUES($1, $2, $3);';
             newInsertQuery.queryValues = [body.id, body.name, body.description];
@@ -126,55 +124,18 @@ retrieveBossEncounter = (bossURL) => {
               if (err) {
                 console.log(err);
               } else {
-                console.log("insert passed");
+                console.log("Insert passed");
               }
             };
 
             db.makeClientQuery(newInsertQuery);
 
-            // db.query(`INSERT INTO bossencounter
-            // (bossid, name, description) VALUES
-            // ($1, $2, $3);
-            // `, values, (err, res) => {
-            //   if (err) {
-            //     console.log(err);
-            //   } else {
-            //     console.log("insert passed");
-            //   }
-            // });
           } else {
-            console.log("boss already in db");
+            console.log("Boss already in db");
           } 
         }
 
         db.makeClientQuery(newExistsQuery);
-
-        // db.query('SELECT EXISTS (SELECT true FROM bossencounter WHERE bossid = $1)', [body.id], (err, res) => {
-        //   if (err) {
-        //     console.log(err);
-        //   }
-
-        //   if (!res.rows[0].exists) {
-        //     const values = [body.id, body.name, body.description];
-
-        //     db.query(`INSERT INTO bossencounter
-        //     (bossid, name, description) VALUES
-        //     ($1, $2, $3);
-        //     `, values, (err, res) => {
-        //       if (err) {
-        //         console.log(err);
-        //       } else {
-        //         console.log("insert passed");
-        //       }
-        //     });
-        //   } else {
-        //     console.log("boss already in db");
-        //   }
-        //   // db.end();          
-        // });
-
-        
-        
       }
     }
   );

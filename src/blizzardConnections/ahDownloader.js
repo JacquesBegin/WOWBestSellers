@@ -1,5 +1,6 @@
 const request = require("request");
 const fs = require("fs");
+const db = require("../../db/dbConnection");
 
 require('dotenv').config();
 
@@ -38,38 +39,51 @@ retrieveAHData = (serverUrl) => {
   
         ahDownloadData.url = body.files[0].url;
         ahDownloadData.lastModified = body.files[0].lastModified;
-  
-        var downloadStartTime = Date.now();
-  
-        request(
-          {
-            url: ahDownloadData.url,
-            json: true
-          }, function (err, res, data) {
-            if (!err & res.statusCode === 200) {
-              
-              var downloadEndTime = Date.now();
-              var downloadElapsedTimeMilliseconds = downloadEndTime - downloadStartTime;
-              var filename = `${__dirname}/ahData/AHData_${Date.now()}.json`;
-  
-              ahDownloadData.downloadElapsedTimeMilliseconds = downloadElapsedTimeMilliseconds;
-              ahDownloadData.ahData = data;
-              ahDownloadData.createDate = downloadStartTime;
-              ahDownloadData.filename = filename;
-  
-              var currentAHData = JSON.stringify(ahDownloadData);
-              
-              console.log("passed loading");
-              fs.writeFile(filename, currentAHData, (err) => {
-                if (err) {
-                  console.log(`err: ${err}`);
-                } else {
-                  console.log(`File ${filename} saved`);
-                }
-              });
-            }
+        
+        db.query('SELECT EXISTS (SELECT true FROM ahdump WHERE lastmodified = $1)', [ahDownloadData.lastModified], (err, res) => {
+          if (err) {
+            console.log(err);
           }
-        );
+
+          if (!res) {
+            var downloadStartTime = Date.now();
+  
+            request(
+              {
+                url: ahDownloadData.url,
+                json: true
+              }, function (err, res, data) {
+                if (!err & res.statusCode === 200) {
+                  
+                  var downloadEndTime = Date.now();
+                  var downloadElapsedTimeMilliseconds = downloadEndTime - downloadStartTime;
+                  var filename = `${__dirname}/ahData/AHData_${Date.now()}.json`;
+      
+                  ahDownloadData.downloadElapsedTimeMilliseconds = downloadElapsedTimeMilliseconds;
+                  ahDownloadData.ahData = data;
+                  ahDownloadData.createDate = downloadStartTime;
+                  ahDownloadData.filename = filename;
+      
+                  var currentAHData = JSON.stringify(ahDownloadData);
+                  
+                  console.log("passed loading");
+                  fs.writeFile(filename, currentAHData, (err) => {
+                    if (err) {
+                      console.log(`err: ${err}`);
+                    } else {
+                      console.log(`File ${filename} saved`);
+                    }
+                  });
+                }
+              }
+            );
+          } else {
+            console.log("current ahdump already in database");
+          }
+
+        })
+
+        
       }
     }
   );
@@ -83,7 +97,7 @@ retrieveAHData = (serverUrl) => {
 
 
 
-const bossURL = `https://us.api.battle.net/wow/boss/24723?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u`;
+const bossURL = `https://us.api.battle.net/wow/boss/23863?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u`;
 
 
 retrieveBossEncounter = (bossURL) => {
@@ -93,9 +107,73 @@ retrieveBossEncounter = (bossURL) => {
       json: true
     }, function (err, res, body) {
       if (!err & res.statusCode === 200) {
-        // console.log("RES-Encounter Data: ", res.body);
-        // console.log("BODY-Encounter Data: ", body);
-        console.log(typeof body);
+        console.log("BODY-Encounter Data: ", body);
+
+        db.connectToPool();
+
+        // check if boss already exists in database
+        var newExistsQuery = {};
+        newExistsQuery.queryText = 'SELECT EXISTS (SELECT true FROM bossencounter WHERE bossid = $1);';
+        newExistsQuery.queryValues = [body.id];
+        newExistsQuery.queryCallback = function(err, result) {
+          if (!result.rows[0].exists) {
+
+            // if boss does not exist in db add it
+            var newInsertQuery = {};
+            newInsertQuery.queryText = 'INSERT INTO bossencounter(bossid, name, description) VALUES($1, $2, $3);';
+            newInsertQuery.queryValues = [body.id, body.name, body.description];
+            newInsertQuery.queryCallback = function(err, result) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("insert passed");
+              }
+            };
+
+            db.makeClientQuery(newInsertQuery);
+
+            // db.query(`INSERT INTO bossencounter
+            // (bossid, name, description) VALUES
+            // ($1, $2, $3);
+            // `, values, (err, res) => {
+            //   if (err) {
+            //     console.log(err);
+            //   } else {
+            //     console.log("insert passed");
+            //   }
+            // });
+          } else {
+            console.log("boss already in db");
+          } 
+        }
+
+        db.makeClientQuery(newExistsQuery);
+
+        // db.query('SELECT EXISTS (SELECT true FROM bossencounter WHERE bossid = $1)', [body.id], (err, res) => {
+        //   if (err) {
+        //     console.log(err);
+        //   }
+
+        //   if (!res.rows[0].exists) {
+        //     const values = [body.id, body.name, body.description];
+
+        //     db.query(`INSERT INTO bossencounter
+        //     (bossid, name, description) VALUES
+        //     ($1, $2, $3);
+        //     `, values, (err, res) => {
+        //       if (err) {
+        //         console.log(err);
+        //       } else {
+        //         console.log("insert passed");
+        //       }
+        //     });
+        //   } else {
+        //     console.log("boss already in db");
+        //   }
+        //   // db.end();          
+        // });
+
+        
         
       }
     }

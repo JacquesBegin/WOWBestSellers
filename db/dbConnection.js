@@ -16,16 +16,16 @@ const pool = new Pool({
 module.exports = {
 
   connectToPool: () => {
-    // const pool = new Pool({
-    //   user: process.env.PGUSER,
-    //   host: process.env.PGHOST,
-    //   database: process.env.PGDATABASE,
-    //   password: process.env.PGPASSWORD,
-    //   port: process.env.PGPORT,
-    //   max: 20,
-    //   idleTimeoutMillis: 30000,
-    //   connectionTimeoutMillis: 2000
-    // });
+    const pool = new Pool({
+      user: process.env.PGUSER,
+      host: process.env.PGHOST,
+      database: process.env.PGDATABASE,
+      password: process.env.PGPASSWORD,
+      port: process.env.PGPORT,
+      max: 20,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 2000
+    });
   },
 
   makeClientQuery: (newQuery) => {
@@ -39,17 +39,15 @@ module.exports = {
           return console.log("Error executing query: ", err.stack);
         }
         console.log(result);
-        newQuery.queryCallback(err, result);
+        if (newQuery.queryCallback) {
+          newQuery.queryCallback(err, result);
+        }
       })
     });
   }, 
 
   query: (text, params, callback) => {
     return pool.query(text, params, callback);
-  },
-
-  release: () => {
-
   },
 
   end: () => {

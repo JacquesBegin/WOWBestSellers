@@ -107,7 +107,7 @@ retrieveBossEncounter = (bossURL) => {
       json: true
     }, function (err, res, body) {
       if (!err & res.statusCode === 200) {
-        console.log("BODY-Encounter Data: ", body);
+        // console.log("BODY-Encounter Data: ", body);
 
         // Check if boss already exists in database
         var newExistsQuery = {};

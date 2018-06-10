@@ -2,7 +2,7 @@ const { Pool, Client} = require("pg");
 
 require('dotenv').config();
 
-// new database client to handle connections/queries/etc.
+// new database client and pool to handle connections/queries/etc.
 module.exports = {
   
   client: new Client({

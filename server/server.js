@@ -29,9 +29,5 @@ startAppServer = () => {
   var server = app.listen(process.env.PORT || PORT, () => {
     var port = server.address().port;
     console.log(`App server running on port ${port}`);
-    db.query('SELECT * FROM bossencounter')
-      .then((results) => {
-        console.log(results);
-      })
   });
 }

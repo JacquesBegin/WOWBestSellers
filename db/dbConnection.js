@@ -1,21 +1,6 @@
 require('dotenv').config();
 const Sequelize = require("sequelize");
 
-
-// const { Pool } = require("pg");
-
-// const pool = new Pool({
-//   user: process.env.PGUSER,
-//   host: process.env.PGHOST,
-//   database: process.env.PGDATABASE,
-//   password: process.env.PGPASSWORD,
-//   port: process.env.PGPORT,
-//   max: 20,
-//   idleTimeoutMillis: 30000,
-//   connectionTimeoutMillis: 2000
-// });
-
-
 const sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, process.env.PGPASSWORD, {
   host: process.env.PGHOST,
   dialect: "postgres",
@@ -26,7 +11,6 @@ const sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, proc
     idle: 10000
   }
 });
-
 
 module.exports = sequelize;
 

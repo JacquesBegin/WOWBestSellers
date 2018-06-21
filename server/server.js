@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require("express");
+const path = require("path");
 const db = require("../db/dbConnection");
 const auctionRoutes = require("../routes/auctionRoutes")(db);
 
@@ -10,8 +11,9 @@ const PORT = 8883;
 // attach routes to the express app
 app.use("/auctions", auctionRoutes);
 
-app.get("/", function(req, res) {
-  res.send("Wow Best Sellers");
+app.get("*", function(req, res) {
+  // res.send("Wow Best Sellers");
+  res.sendFile(path.join(__dirname + "/../index.html"));
 });
 
 

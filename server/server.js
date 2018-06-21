@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require("express");
-const auctionRoutes = require("../routes/auctionRoutes");
 const db = require("../db/dbConnection");
+const auctionRoutes = require("../routes/auctionRoutes")(db);
 
 const app = express();
 const PORT = 8883;

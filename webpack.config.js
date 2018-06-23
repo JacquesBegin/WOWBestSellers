@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
-  entry: "./server/server.js",
+  entry: "./src/index.js",
   mode: "development",
   module: {
     rules: [
@@ -12,7 +12,23 @@ module.exports = {
         loader: 'babel-loader',
         options: { presets: ['env'] }
       },
-      
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
+      }
     ]
-  }
-}
+  },
+  resolve: { extensions: ['*', '.js', '.jsx'] },
+  output: {
+    path: path.resolve(__dirname, "dist/"),
+    publicPath: "/dist/",
+    filename: "bundle.js"
+  },
+  devServer: {
+    contentBase: path.join(__dirname, "public/"),
+    port: 8883,
+    publicPath: "http://localhost:8883/dist/",
+    hotOnly: true
+  },
+  plugins: [ new webpack.HotModuleReplacementPlugin() ]
+};

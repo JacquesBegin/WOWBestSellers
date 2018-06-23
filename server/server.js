@@ -5,7 +5,7 @@ const db = require("../db/dbConnection");
 const auctionRoutes = require("../routes/auctionRoutes")(db);
 
 const app = express();
-const PORT = 8883;
+const PORT = 8884;
 
 
 // attach routes to the express app
@@ -13,7 +13,7 @@ app.use("/auctions", auctionRoutes);
 
 app.get("*", function(req, res) {
   // res.send("Wow Best Sellers");
-  res.sendFile(path.join(__dirname + "/../index.html"));
+  res.sendFile(path.join(__dirname + "/../src/index.html"));
 });
 
 

@@ -14,6 +14,10 @@ module.exports = function(db) {
         });
   });
 
+  router.get("/test", function(req, res) {
+    res.send({test: "Test Route"});
+  });
+
   return router;
 }
 

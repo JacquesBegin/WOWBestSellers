@@ -15,10 +15,8 @@ app.use(express.static(path.join(__dirname, "/client/build")));
 app.use("/auctions", auctionRoutes);
 
 app.all("*", function(req, res) {
-  // res.send("Wow Best Sellers");
   res.sendFile(path.join(__dirname + "/../client/build/index.html"));
-  // res.sendFile(__dirname + "/../client/build/index.html");
-  // res.status(404).send("We are sorry, content not found.");
+  // res.sendFile(path.join(__dirname + "/../client/public/index.html"));
 });
 
 

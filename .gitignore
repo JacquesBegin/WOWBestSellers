@@ -1,3 +1,4 @@
 node_modules
 *.env
-ahData/*
+server/ahData/*
+client/build

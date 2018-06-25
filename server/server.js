@@ -13,7 +13,7 @@ app.use("/auctions", auctionRoutes);
 
 app.get("*", function(req, res) {
   // res.send("Wow Best Sellers");
-  res.sendFile(path.join(__dirname + "/../public/index.html"));
+  res.sendFile(path.join(__dirname + "/../index.html"));
 });
 
 

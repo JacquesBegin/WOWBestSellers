@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require("express");
 const path = require("path");
-const db = require("../db/dbConnection");
-const auctionRoutes = require("../routes/auctionRoutes")(db);
+const db = require("./db/dbConnection");
+const auctionRoutes = require("./routes/auctionRoutes")(db);
 
 const app = express();
 const PORT = 8884;
@@ -11,9 +11,9 @@ const PORT = 8884;
 // attach routes to the express app
 app.use("/auctions", auctionRoutes);
 
-app.get("*", function(req, res) {
+app.all("*", function(req, res) {
   // res.send("Wow Best Sellers");
-  res.sendFile(path.join(__dirname + "/../public/index.html"));
+  res.status(404).send("We are sorry, content not found.")
 });
 
 

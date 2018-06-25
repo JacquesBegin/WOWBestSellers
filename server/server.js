@@ -7,6 +7,9 @@ const auctionRoutes = require("./routes/auctionRoutes")(db);
 const app = express();
 const PORT = 8884;
 
+// Serve static files from the React build folder
+app.use(express.static(path.join(__dirname, 'client/build')));
+
 
 // attach routes to the express app
 app.use("/auctions", auctionRoutes);

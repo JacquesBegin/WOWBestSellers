@@ -11,12 +11,13 @@ const PORT = 8884;
 app.use(express.static(path.join(__dirname, "/../client/build")));
 
 
-// attach routes to the express app
+// Attach routes to the express app
 app.use("/auctions", auctionRoutes);
 
+
+// Assign the catch all route to send the index.html page
 app.all("*", function(req, res) {
   res.sendFile(path.join(__dirname + "/../client/build/index.html"));
-  // res.sendFile(path.join(__dirname + "/../client/public/index.html"));
 });
 
 

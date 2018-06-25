@@ -15,11 +15,7 @@ module.exports = function(db) {
   });
 
   router.get("/test", function(req, res) {
-<<<<<<< HEAD:server/routes/auctionRoutes.js
     res.send({test: "Test Route"});
-=======
-    res.send("Test Route");
->>>>>>> master:routes/auctionRoutes.js
   });
 
   return router;

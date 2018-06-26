@@ -4,10 +4,12 @@ const router = express.Router();
 module.exports = function(db) {
 
   router.get("/", function(req, res) {
-    db.query('SELECT * FROM bossencounter ORDER BY id LIMIT 2 OFFSET 1')
+    db.query('SELECT * FROM bossencounter ORDER BY id LIMIT 2 OFFSET 1', {
+      raw: true
+    })
         .then((results) => {
-          console.log(results);
-          res.send(results[0]);
+          console.log(results[0]);
+          res.json(results[0]);
         })
         .catch((err) => {
           console.error("Error getting auctions. ERROR: ", err);

@@ -22,13 +22,20 @@ class App extends Component {
       .then(res => res.json())
       .then(test => {
         console.log(test);
-        this.setState({testDBData: test})
+        let testRows = test.map((data) => {
+          return (
+            <li key={data.bossid}>
+              {data.name}
+            </li>  
+          )
+        });
+        this.setState({testDBData: testRows})
       });
   }
 
   componentDidMount() {
     this.getTestStringFromAPI();
-    this.getDBDataFromAPI();
+    // this.getDBDataFromAPI();
   }
 
   render() {
@@ -36,14 +43,14 @@ class App extends Component {
       <div>
         <h1>Wow Best Sellers</h1>
         <div>{this.state.testString.test}</div>
+        <button onClick={this.getDBDataFromAPI}>
+          Get data
+        </button>
+        <button onClick={() => {this.setState({testDBData: []})}}>
+          Clear data
+        </button>
         <ul>
-          {this.state.testDBData.map((data) => {
-            return (
-              <li key={data.bossid}>
-                {data.name}
-              </li>  
-            )
-          })}
+          {this.state.testDBData}
         </ul>
       </div>
     );

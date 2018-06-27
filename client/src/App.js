@@ -38,7 +38,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.getTestStringFromAPI();
+    // this.getTestStringFromAPI();
     // this.getDBDataFromAPI();
   }
 

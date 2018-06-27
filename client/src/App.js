@@ -19,7 +19,7 @@ class App extends Component {
         console.log(test);
         this.setState({testString: test})
       });
-  }
+  };
 
   getDBDataFromAPI = () => {
     fetch("/auctions")
@@ -35,7 +35,7 @@ class App extends Component {
         });
         this.setState({testDBData: testRows})
       });
-  }
+  };
 
   componentDidMount() {
     // this.getTestStringFromAPI();

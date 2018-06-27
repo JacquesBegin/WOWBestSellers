@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
+import Header from './components/header/header.js';
 
 class App extends Component {
-
-  state = {
-    testString: {},
-    testDBData: []
+  constructor(props) {
+    super(props);
+    this.state = {
+      testString: {},
+      testDBData: []
+    }
   }
+  
 
   getTestStringFromAPI = () => {
     fetch("/auctions/test")
@@ -41,6 +45,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <Header />
         <h1>Wow Best Sellers</h1>
         <div>{this.state.testString.test}</div>
         <button onClick={this.getDBDataFromAPI}>

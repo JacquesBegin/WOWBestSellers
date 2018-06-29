@@ -13,7 +13,7 @@ class App extends Component {
   
 
   getTestStringFromAPI = () => {
-    fetch("/auctions/test")
+    return fetch("/auctions/test")
       .then(res => res.json())
       .then(test => {
         console.log(test);
@@ -22,7 +22,7 @@ class App extends Component {
   };
 
   getDBDataFromAPI = () => {
-    fetch("/auctions")
+    return fetch("/auctions")
       .then(res => res.json())
       .then(test => {
         console.log(test);
@@ -38,7 +38,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    // this.getTestStringFromAPI();
+    this.getTestStringFromAPI();
     // this.getDBDataFromAPI();
   }
 

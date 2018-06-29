@@ -8,7 +8,7 @@ import App from './App';
 it('renders without crashing', () => {
   const div = document.createElement('div');
   // ReactDOM.render(<App />, div);
-  const wrapper = render(<App />, div);
+  const wrapper = render(<App />);
   // ReactDOM.unmountComponentAtNode(div);
-  expect(wrapper.find('div')).to.have.length(1);
+  expect(wrapper.find('button')).length(1);
 });

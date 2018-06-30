@@ -4,12 +4,10 @@ const router = express.Router();
 module.exports = function(db) {
 
   router.get("/all/:position", function(req, res) {
-    console.log("here");
     let startingId = (req.params.position === 0) ? 1255411726 : req.params.position;
     if (req.params.position === 0) {
 
     }
-
 
     db.query(`SELECT * FROM ahrecord ORDER BY auctionid LIMIT 20`, {
       raw: true

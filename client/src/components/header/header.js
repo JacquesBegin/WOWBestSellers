@@ -16,7 +16,7 @@ class Header extends Component {
   render() {
     return (
       <div className="header">
-        HEADER
+        <h1>Wow Best Sellers</h1>
       </div>
     );
   }

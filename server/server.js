@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const db = require("./db/dbConnection");
 const auctionRoutes = require("./routes/auctionRoutes")(db);
+const blizzardAccess = require("./blizzardConnections/blizzardDataAccess");
 
 const app = express();
 const PORT = 8884;
@@ -18,6 +19,10 @@ initializeRoutes = () => {
   app.all("*", function(req, res) {
     res.sendFile(path.join(__dirname + "/../client/build/index.html"));
   });  
+}
+
+startBlizzardDownloader = () => {
+  blizzardAccess(db);
 }
 
 startAppServer = () => {

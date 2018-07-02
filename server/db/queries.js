@@ -20,4 +20,17 @@ module.exports = {
               WHERE itemid = ${itemId};
             `);
           },
+
+  addItem: function(item) {
+            return (`INSERT INTO items
+            (itemid, name, description, icon
+            stackable, itembind, buyprice,
+            sellprice, isauctionable) VALUES
+            (${item.itemid}, ${item.name}, ${item.description}, 
+            ${item.icon}, ${item.stackable}, ${item.itembind},
+            ${item.buyprice}, ${item.sellprice}, ${item.isauctionable}
+            );`);
+          },
+
+  
 }

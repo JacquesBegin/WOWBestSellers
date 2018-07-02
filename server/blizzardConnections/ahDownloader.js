@@ -44,7 +44,8 @@ retrieveAHData = (serverUrl) => {
           if (err) {
             console.log(err);
           }
-
+          // this if statement may not be checking the correct info
+          // may be res.xxxxxxx
           if (!res) {
             var downloadStartTime = Date.now();
   

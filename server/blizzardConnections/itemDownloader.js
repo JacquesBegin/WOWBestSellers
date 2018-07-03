@@ -3,6 +3,11 @@ const db = require("../db/dbConnection");
 
 require('dotenv').config();
 
+// Purpose of this file:
+// Check the database for an item, if it is not found
+// in the database call the blizzard API to download
+// the item information and insert it into the database.
+
 
 // Requests item data from Blizzard and takes a callback 
 // to handle the returned data.
@@ -71,9 +76,7 @@ retrieveItemFromDB = (itemId) => {
   return promise;
 }
 
-// Check the database for an item, if it is not found
-// in the database call the blizzard API to download
-// the item information and insert it into the database
+// Function to run itemDownloader functionality
 downloadNewItemToDb = (itemId) => {
   retrieveItemFromDB(itemId)
   .then((result) => {

@@ -6,10 +6,6 @@ require('dotenv').config();
 
 
 
-createItemsTable = () => {
-  // db.sequelize.query(dbQueries.createItemsTable());
-}
-
 importItemDataFromBlizzard = (itemId, callback) => {
   let testItemId = 18803;
   let itemUrl = `https://us.api.battle.net/wow/item/${itemId}?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u`;
@@ -70,8 +66,6 @@ addItemToDB = (item) => {
 }
 
 retrieveItemFromDB = (itemId) => {
-  // db.sequelize.query(dbQueries.createItemsTable())
-  //   .then(db.query(dbQueries.getItem(itemId)))
   let promise = new Promise((resolve, reject) => {
     db.sequelize.query(dbQueries.getItem(itemId))
     .then((response) => {

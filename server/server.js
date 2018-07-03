@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 const db = require("./db/dbConnection");
 const auctionRoutes = require("./routes/auctionRoutes")(db);
-const blizzardAccess = require("./blizzardConnections/blizzardDataAccess");
+const blizzardAccess = require("./blizzardConnections/blizzardDataAccess")(db);
 
 const app = express();
 const PORT = 8884;
@@ -22,7 +22,7 @@ initializeRoutes = () => {
 }
 
 startBlizzardDownloader = () => {
-  blizzardAccess(db);
+  blizzardAccess();
 }
 
 startAppServer = () => {
@@ -33,7 +33,7 @@ startAppServer = () => {
 }
 
 // Ensure there is a connection to the database.
-db.authenticate()
+db.sequelize.authenticate()
   .then(() => {
     console.log("Connected to the database.");
     initializeRoutes();

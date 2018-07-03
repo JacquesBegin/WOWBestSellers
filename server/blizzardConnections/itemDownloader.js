@@ -44,25 +44,6 @@ addItemToDB = (item) => {
   .catch((err) => {
     console.log("Error during item INSERT: ", err);
   });
-
-  // let itemInfo = {};
-  // itemInfo.itemid = item.id;
-  // itemInfo.name = item.name;
-  // itemInfo.description = item.description;
-  // itemInfo.icon = item.icon;
-  // itemInfo.stackable = item.stackable;
-  // itemInfo.itembind = item.itemBind;
-  // itemInfo.buyprice = item.buyPrice;
-  // itemInfo.sellprice = item.sellPrice;
-  // itemInfo.isauctionable = item.isAuctionable;
-
-  // db.query(dbQueries.addItem(itemInfo))
-  //   .then(() => {
-  //     console.log(`Item ${itemInfo.itemid} added to database successfully`);
-  //   })
-  //   .catch((err) => {
-  //     console.log(`Error adding item ${itemInfo.itemid} to database: ${err}`);
-  //   })
 }
 
 retrieveItemFromDB = (itemId) => {
@@ -82,8 +63,7 @@ retrieveItemFromDB = (itemId) => {
   return promise;
 }
 
-
-// Check database for an item, if it is not found
+// Check the database for an item, if it is not found
 // in the database call the blizzard API to download
 // the item information and insert it into the database
 downloadNewItemToDb = (itemId) => {
@@ -96,7 +76,4 @@ downloadNewItemToDb = (itemId) => {
 }
 
 
-// createItemsTable();
-// retrieveItemFromDB(1);
-// importItemDataFromBlizzard(18803);
 downloadNewItemToDb(18803);

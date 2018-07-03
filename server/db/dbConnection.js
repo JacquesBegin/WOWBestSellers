@@ -19,11 +19,13 @@ db.sequelize = sequelize;
 
 // add db models/tables
 db.items = require("./models/item.js")(sequelize, Sequelize);
+db.dumps = require("./models/dump.js")(sequelize, Sequelize);
 
 // Use sync to create the table for each model
 // Only use this for the initial table creation and then
 // remove from running in the code.
 // db.items.sync();
+// db.dumps.sync();
 
 module.exports = db;
 

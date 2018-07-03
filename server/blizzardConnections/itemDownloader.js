@@ -5,7 +5,7 @@ const dbQueries = require("../db/queries");
 require('dotenv').config();
 
 
-
+// Requests item data from Blizzard 
 importItemDataFromBlizzard = (itemId, callback) => {
   let testItemId = 18803;
   let itemUrl = `https://us.api.battle.net/wow/item/${itemId}?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u`;
@@ -82,9 +82,6 @@ retrieveItemFromDB = (itemId) => {
   return promise;
 }
 
-convertEscapeCharacter = () => {
-
-}
 
 // Check database for an item, if it is not found
 // in the database call the blizzard API to download

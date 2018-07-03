@@ -9,7 +9,7 @@ module.exports = function(db) {
 
     }
 
-    db.query(`SELECT * FROM ahrecord ORDER BY auctionid LIMIT 20`, {
+    db.sequelize.query(`SELECT * FROM ahrecord ORDER BY auctionid LIMIT 20`, {
       raw: true
     })
       .then((results) => {
@@ -22,7 +22,7 @@ module.exports = function(db) {
   });
 
   router.get("/bosses", function(req, res) {
-    db.query('SELECT * FROM bossencounter ORDER BY id LIMIT 2 OFFSET 1', {
+    db.sequelize.query('SELECT * FROM bossencounter ORDER BY id LIMIT 2 OFFSET 1', {
       raw: true
     })
       .then((results) => {

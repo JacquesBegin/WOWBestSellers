@@ -12,7 +12,6 @@ require('dotenv').config();
 // Requests item data from Blizzard and takes a callback 
 // to handle the returned data.
 importItemDataFromBlizzard = (itemId, callback) => {
-  let testItemId = 18803;
   let itemUrl = `https://us.api.battle.net/wow/item/${itemId}?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u`;
 
   request(

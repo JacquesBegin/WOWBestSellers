@@ -1,11 +1,11 @@
 const request = require("request");
 const db = require("../db/dbConnection");
-const dbQueries = require("../db/queries");
 
 require('dotenv').config();
 
 
-// Requests item data from Blizzard 
+// Requests item data from Blizzard and takes a callback 
+// to handle the returned data.
 importItemDataFromBlizzard = (itemId, callback) => {
   let testItemId = 18803;
   let itemUrl = `https://us.api.battle.net/wow/item/${itemId}?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u`;
@@ -16,8 +16,6 @@ importItemDataFromBlizzard = (itemId, callback) => {
       json: true
     }, function (err, res, data) {
       if (!err & res.statusCode === 200) {
-        console.log("Data:", data);
-
         callback(data);
       } else {
         console.log("Error retrieving item from Blizzard: ", err);
@@ -26,6 +24,8 @@ importItemDataFromBlizzard = (itemId, callback) => {
   );
 }
 
+// Takes item data as a parameter and uses the 
+// item model to create a new row in the database
 addItemToDB = (item) => {
   db.items.create({
     item_id: item.id,
@@ -46,18 +46,26 @@ addItemToDB = (item) => {
   });
 }
 
+// Checks database for an item by id, currently only returns
+// a boolean value to indicate if an item is found.
 retrieveItemFromDB = (itemId) => {
   let promise = new Promise((resolve, reject) => {
-    db.sequelize.query(dbQueries.getItem(itemId))
-    .then((response) => {
-      console.log("response:", response);
-      if (!response[0].length) {
-        console.log("null");
-        resolve(false);
-      } else {
-        console.log("item found");
-        resolve(true);
+    db.items.findOne({
+      where: {
+        item_id: itemId
       }
+    })
+    .then((item) => {
+      if (item) {
+        console.log("Item in database");
+        resolve(true);
+      } else {
+        console.log("Item not in database");
+        resolve(false);
+      }
+    })
+    .catch((err) => {
+      reject(err);
     })
   })
   return promise;
@@ -72,8 +80,11 @@ downloadNewItemToDb = (itemId) => {
     if(!result) {
       importItemDataFromBlizzard(itemId, addItemToDB);
     }
+  })
+  .catch((err) => {
+    console.log("Error retrieving item from database: ", err);
   });
 }
 
 
-downloadNewItemToDb(18803);
+module.exports = downloadNewItemToDb;

@@ -12,7 +12,20 @@ const sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, proc
   }
 });
 
-module.exports = sequelize;
+const db = {};
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+// add db models/tables
+db.items = require("./models/item.js")(sequelize, Sequelize);
+
+// Use sync to create the table for each model
+// Only use this for the initial table creation and then
+// remove from running in the code.
+// db.items.sync();
+
+module.exports = db;
 
 // module.exports = {
 

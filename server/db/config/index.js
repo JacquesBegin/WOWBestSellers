@@ -24,12 +24,19 @@ db.dumps = require("../models/dump.js")(sequelize, Sequelize);
 db.auctions = require("../models/auction.js")(sequelize, Sequelize);
 
 
-// Use sync to create the table for each model
+// Use sync to create the table for each model.
 // Only use this for the initial table creation and then
 // remove from running in the code.
 // db.items.sync();
 // db.dumps.sync();
 // db.auctions.sync();
+
+
+// Use to drop/delete tables.
+// This will destroy all data contained in the table.
+// db.items.drop();
+// db.dumps.drop();
+// db.auctions.drop();
 
 
 // Create associations

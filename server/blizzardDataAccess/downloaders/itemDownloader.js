@@ -42,7 +42,7 @@ addItemToDB = (db, item) => {
     is_auctionable: item.isAuctionable
   })
   .then((newItem) => {
-    console.log(`Item ${newItem.name} (${newItem.item_id}) added to the database`);
+    console.log(`Item ${newItem.name} (${newItem.item_id}) added to the database.`);
   })
   .catch((err) => {
     console.log("Error during item INSERT: ", err);
@@ -60,10 +60,10 @@ retrieveItemFromDB = (db, itemId) => {
     })
     .then((item) => {
       if (item) {
-        console.log("Item in database");
+        console.log("Item in database.");
         resolve(true);
       } else {
-        console.log("Item not in database");
+        console.log("Item not in database.");
         resolve(false);
       }
     })

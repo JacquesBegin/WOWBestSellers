@@ -5,6 +5,7 @@ const db = require("./db/config/index");
 const auctionRoutes = require("./routes/auctionRoutes")(db);
 const blizzardDownloader = require("./blizzardDataAccess/index")(db);
 const itemDownloader = require("./blizzardDataAccess/downloaders/itemDownloader");
+const ahDumpDownloader = require("./blizzardDataAccess/downloaders/ahDumpDownloader");
 
 const app = express();
 const PORT = 8884;
@@ -40,6 +41,7 @@ db.sequelize.authenticate()
     initializeRoutes();
     startAppServer();
     // itemDownloader(db, 18807);
+    // ahDumpDownloader(db);
   })
   .catch(err => {
     console.error("Unable to connect to database: ", err);

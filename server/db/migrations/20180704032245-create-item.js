@@ -38,11 +38,11 @@ module.exports = {
       is_auctionable: {
         type: Sequelize.BOOLEAN
       },
-      createdAt: {
+      created_At: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_At: {
         allowNull: false,
         type: Sequelize.DATE
       }
@@ -52,6 +52,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Items');
+    return queryInterface.dropTable('items');
   }
 };

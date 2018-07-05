@@ -1,4 +1,5 @@
 'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   var Item = sequelize.define('Item', {
     name: DataTypes.TEXT,
@@ -10,9 +11,6 @@ module.exports = (sequelize, DataTypes) => {
     buy_price: DataTypes.INTEGER,
     sell_price: DataTypes.INTEGER,
     is_auctionable: DataTypes.BOOLEAN
-  }, {
-    paranoid: true,
-    underscored: true
   });
   Item.associate = function(models) {
     // associations can be defined here

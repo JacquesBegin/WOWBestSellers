@@ -1,10 +1,10 @@
 require('dotenv').config();
 const express = require("express");
 const path = require("path");
-const db = require("./db/models");
+const db = require("./db/config/index");
 const auctionRoutes = require("./routes/auctionRoutes")(db);
-const blizzardAccess = require("./blizzardConnections/blizzardDataAccess")(db);
-const itemDownloader = require("./blizzardConnections/itemDownloader");
+const blizzardDownloader = require("./blizzardDataAccess/index")(db);
+const itemDownloader = require("./blizzardDataAccess/downloaders/itemDownloader");
 
 const app = express();
 const PORT = 8884;
@@ -22,8 +22,8 @@ initializeRoutes = () => {
   });  
 }
 
-startBlizzardDownloader = () => {
-  blizzardAccess();
+startBlizzardDownloader = (db) => {
+  blizzardDownloader(db);
 }
 
 startAppServer = () => {
@@ -39,7 +39,7 @@ db.sequelize.authenticate()
     console.log("Connected to the database.");
     initializeRoutes();
     startAppServer();
-    // itemDownloader(18805);
+    // itemDownloader(db, 18807);
   })
   .catch(err => {
     console.error("Unable to connect to database: ", err);

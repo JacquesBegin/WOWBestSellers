@@ -135,4 +135,4 @@ retrieveBossEncounter = (bossURL) => {
   );
 }
 
-retrieveBossEncounter(bossURL);
+// retrieveBossEncounter(bossURL);

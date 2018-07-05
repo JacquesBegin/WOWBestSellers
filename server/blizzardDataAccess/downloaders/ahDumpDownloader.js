@@ -33,8 +33,6 @@ importAhDumpData = (db) => {
                 .catch((err) => {
                   console.log("Dump not added to database: ", err);
                 })
-            } else {
-              console.log("Dump already downloaded");
             }
           })
       } else {
@@ -73,6 +71,16 @@ addDumpToDB = (db, dump) => {
   // downloader and start the process of importing
   // all auctions from the current dump.
   let promise = new Promise((resolve, reject) => {
+    db.dumps.create({
+      url: dump.url,
+      last_modified: dump.lastModified
+    })
+    .then((newDump) => {
+      console.log(`Dump ${newDump.last_modified} (ID: ${newDump.id}) added to the database.`);
+    })
+    .catch((err) => {
+      console.log("Error during dump INSERT: ", err);
+    });
     resolve();
   })
   return promise;

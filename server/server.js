@@ -6,6 +6,7 @@ const auctionRoutes = require("./routes/auctionRoutes")(db);
 const blizzardDownloader = require("./blizzardDataAccess/index")(db);
 const itemDownloader = require("./blizzardDataAccess/downloaders/itemDownloader");
 const ahDumpDownloader = require("./blizzardDataAccess/downloaders/ahDumpDownloader");
+const auctionDownloader = require("./blizzardDataAccess/downloaders/auctionDownloader");
 
 const app = express();
 const PORT = 8884;
@@ -42,6 +43,7 @@ db.sequelize.authenticate()
     startAppServer();
     // itemDownloader(db, 18807);
     // ahDumpDownloader(db);
+    // auctionDownloader(db, "fakeURL");
   })
   .catch(err => {
     console.error("Unable to connect to database: ", err);

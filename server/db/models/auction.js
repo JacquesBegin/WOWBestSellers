@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
+    auction_id: {
+      type: DataTypes.BIGINT,
+      required: true
+    },
     dump_id: {
       type: DataTypes.BIGINT,
       required: true

@@ -3,136 +3,157 @@ const fs = require("fs");
 
 require('dotenv').config();
 
-/* TODO: Make object for retrieved data with properties for:
-url: url of json data, lastModified: time of last AH data
-update, processTime: time it took to download the json
-data, ahData: json data of ah records
-*/
 
-// the phrase "ah" is used to refer to auction house
+// Import all auctions for a specific auction house dump.
+importAHDataFromBlizzard = (db, dump) => {
 
+  var url = "http://auction-api-us.worldofwarcraft.com/auction-data/de55febb04096123926bca84d7b31f1c/auctions.json"
 
-retrieveAHData = (serverUrl) => {
+  // Potentially add property to record how long the 
+  // download takes.
 
-  // Object to hold data related to ah download data
-  var ahDownloadData = {};
-
-  request(
-    {
-      url: url,
-      json: true
-    }, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        console.log("firstbody:", body);
-  
-        // check body.lastModified with previous request
-        // and only pull data if the content has been
-        // modified.
-        // if (body.lastModified !== XXXXXX.timeStamp)
-  
-        ahDownloadData.url = body.files[0].url;
-        ahDownloadData.lastModified = body.files[0].lastModified;
+  // request(
+  //   {
+  //     url: dump.url,
+  //     json: true
+  //   }, function (err, res, data) {
+  //     if (!err & res.statusCode === 200) {
         
-        db.query('SELECT EXISTS (SELECT true FROM ahdump WHERE lastmodified = $1)', [ahDownloadData.lastModified], (err, res) => {
-          if (err) {
-            console.log(err);
-          }
-          // this if statement may not be checking the correct info
-          // may be res.xxxxxxx
-          if (!res) {
-            var downloadStartTime = Date.now();
-  
-            request(
-              {
-                url: ahDownloadData.url,
-                json: true
-              }, function (err, res, data) {
-                if (!err & res.statusCode === 200) {
-                  
-                  var downloadEndTime = Date.now();
-                  var downloadElapsedTimeMilliseconds = downloadEndTime - downloadStartTime;
-                  var filename = `${__dirname}/ahData/AHData_${Date.now()}.json`;
-      
-                  ahDownloadData.downloadElapsedTimeMilliseconds = downloadElapsedTimeMilliseconds;
-                  ahDownloadData.ahData = data;
-                  ahDownloadData.createDate = downloadStartTime;
-                  ahDownloadData.filename = filename;
-      
-                  var currentAHData = JSON.stringify(ahDownloadData);
-                  
-                  console.log("passed loading");
-                  fs.writeFile(filename, currentAHData, (err) => {
-                    if (err) {
-                      console.log(`err: ${err}`);
-                    } else {
-                      console.log(`File ${filename} saved`);
-                    }
-                  });
-                }
-              }
-            );
-          } else {
-            console.log("current ahdump already in database");
-          }
+  //       // var filename = `${__dirname}/../ahData/AHData_${Date.now()}.json`;
 
-        })
+  //       ahDownloadData.ahData = data;
+  //       ahDownloadData.filename = filename;
 
+  //       var currentAHData = JSON.stringify(ahDownloadData);
         
-      }
-    }
-  );
-};
+  //       console.log("passed loading");
+  //       fs.writeFile(filename, currentAHData, (err) => {
+  //         if (err) {
+  //           console.log(`err: ${err}`);
+  //         } else {
+  //           console.log(`File ${filename} saved`);
+  //         }
+  //       });
+  //     }
+  //   }
+  // );
 
-// setInterval(() => {
-//   console.log("time running");
-// }, 1500);
+  var filename = `${__dirname}/../ahData/AHData_${Date.now()}.json`;
 
-// retrieveAHData(url);
-
-
-
-const bossURL = `https://us.api.battle.net/wow/boss/23863?locale=en_US&apikey=78g9wcthpzzrahr6kjmmu3s79233th2u`;
-
-
-retrieveBossEncounter = (bossURL) => {
-  request(
-    {
-      url: bossURL,
-      json: true
-    }, function (err, res, body) {
-      if (!err & res.statusCode === 200) {
-        // console.log("BODY-Encounter Data: ", body);
-
-        // Check if boss already exists in database
-        var newExistsQuery = {};
-        newExistsQuery.queryText = 'SELECT EXISTS (SELECT true FROM bossencounter WHERE bossid = $1);';
-        newExistsQuery.queryValues = [body.id];
-        newExistsQuery.queryCallback = function(err, result) {
-          if (!result.rows[0].exists) {
-
-            // If boss does not exist in db then insert it
-            var newInsertQuery = {};
-            newInsertQuery.queryText = 'INSERT INTO bossencounter(bossid, name, description) VALUES($1, $2, $3);';
-            newInsertQuery.queryValues = [body.id, body.name, body.description];
-            newInsertQuery.queryCallback = function(err, result) {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log("Insert passed");
-              }
-            };
-
-            db.makeClientQuery(newInsertQuery);
-
-          } else {
-            console.log("Boss already in db");
-          } 
-        }
-
-        db.makeClientQuery(newExistsQuery);
-      }
-    }
-  );
+  // request.get(dump.url)
+  request.get(url)
+    .on('response', function(res) {
+      console.log("res.statusCode: ", res.statusCode);
+      console.log("res.headers: ", res.headers['content-type']);
+    })
+    .on('error', function(err) {
+      console.log("Error requesting auction house data: ", err);
+    })
+    .on('end', function() {
+      console.log("Auction file created.");
+      // Once the stream has ended, add auctions to DB
+      addAuctionsToDB(db, dump.id, filename);
+    })
+    .pipe(fs.createWriteStream(filename))
 }
 
-// retrieveBossEncounter(bossURL);
+// Add auctions to the database from a json file
+addAuctionsToDB = async (db, dumpId, file) => {
+
+  const tempDB = require("../../db/config/index.js");
+
+  // const jsonData = require(file);
+  const jsonData = require("../ahData/AHData_1530834639900.json");
+  console.log("jsonData.realms: ", jsonData.realms);
+  const auctions = jsonData.auctions;
+  const auctionCount = 0;
+  const auctionLength = auctions.length;
+
+  console.log("auction: ", auctions[0]);
+
+  // for(let auc of auctions) {
+  //   await insertAuction(tempDB, dumpId, auc);
+  // }
+
+  // auctions.map((auc) => {
+  //   insertAuction(tempDB, dumpId, auc);
+  //   return null;
+  // })
+
+  insertAuction(tempDB, dumpId, auctions, auctionCount, auctionLength);
+
+  // let auction = auctions[0];
+  // auctions.forEach(function(auction) {
+  // for(let auction in auctions) {
+    // tempDB.auctions.create({
+  //   db.auctions.create({
+  //     dump_id: dumpId,
+  //     auction_id: auction.auc,
+  //     item_id: auction.item,
+  //     owner: auction.owner,
+  //     owner_realm: auction.ownerRealm,
+  //     bid: auction.bid,
+  //     buyout: auction.buyout,
+  //     quantity: auction.quantity,
+  //     time_left: auction.timeLeft,
+  //     rand: auction.rand,
+  //     seed: auction.seed,
+  //     context: auction.context,
+  //     pet_species_id: auction.petSpeciesId || null,
+  //     pet_breed_id: auction.petBreedId || null,
+  //     pet_level: auction.petLevel || null,
+  //     pet_quality_id: auction.petQualityId || null
+  //   })
+  //   .then((auction) => {
+  //   })
+  //   .catch((err) => {
+  //     console.log("Error during auction INSERT: ", err);
+  //   });
+  // });
+}
+
+insertAuction = (db, dumpId, auctions, auctionCount, auctionLength) => {
+  if (auctionCount < auctionLength) {
+    let auction = auctions[auctionCount];
+    // let promise = new Promise((resolve, reject) => {
+      db.auctions.create({
+        dump_id: dumpId,
+        auction_id: auction.auc,
+        item_id: auction.item,
+        owner: auction.owner,
+        owner_realm: auction.ownerRealm,
+        bid: auction.bid,
+        buyout: auction.buyout,
+        quantity: auction.quantity,
+        time_left: auction.timeLeft,
+        rand: auction.rand,
+        seed: auction.seed,
+        context: auction.context,
+        pet_species_id: auction.petSpeciesId || null,
+        pet_breed_id: auction.petBreedId || null,
+        pet_level: auction.petLevel || null,
+        pet_quality_id: auction.petQualityId || null
+      })
+      .then((result) => {
+        console.log("INSERT successful: ", result);
+        
+        
+      })
+      .catch((err) => {
+        console.log("Error during auction INSERT: ", err);
+      });
+    // });
+    // return promise;
+    auctionCount++;
+    insertAuction(db, dumpId, auctions, auctionCount, auctionLength);
+  }
+}
+
+
+// module.exports = importAHDataFromBlizzard;
+
+addAuctionsToDB("db", 1111111, "fakeFile");
+
+
+
+

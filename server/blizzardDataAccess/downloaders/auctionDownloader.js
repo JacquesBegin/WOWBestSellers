@@ -135,17 +135,22 @@ insertAuction = (db, dumpId, auctions, auctionCount, auctionLength) => {
         pet_quality_id: auction.petQualityId || null
       })
       .then((result) => {
-        console.log("INSERT successful: ", result);
-        
-        
+        console.log("INSERT successful: ", auctionCount);
+        auctionCount++;
+        // Using process.nextTick() causes the next 
+        // insertAuction call to be called after the 
+        // current "tick"/loop in the node event loop.
+        // Using process.nextTick() locks the application
+        // causing any I/O process to wait until after 
+        // the last process.nextTick() is finished.
+        process.nextTick(() => {insertAuction(db, dumpId, auctions, auctionCount, auctionLength)});
       })
       .catch((err) => {
         console.log("Error during auction INSERT: ", err);
       });
     // });
     // return promise;
-    auctionCount++;
-    insertAuction(db, dumpId, auctions, auctionCount, auctionLength);
+    
   }
 }
 

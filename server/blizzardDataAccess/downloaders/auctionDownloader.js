@@ -7,7 +7,7 @@ require('dotenv').config();
 // Import all auctions for a specific auction house dump.
 importAHDataFromBlizzard = (db, dump) => {
 
-  var url = "http://auction-api-us.worldofwarcraft.com/auction-data/de55febb04096123926bca84d7b31f1c/auctions.json"
+  // var url = "http://auction-api-us.worldofwarcraft.com/auction-data/de55febb04096123926bca84d7b31f1c/auctions.json"
 
   // Potentially add property to record how long the 
   // download takes.
@@ -40,8 +40,8 @@ importAHDataFromBlizzard = (db, dump) => {
 
   var filename = `${__dirname}/../ahData/AHData_${Date.now()}.json`;
 
-  // request.get(dump.url)
-  request.get(url)
+  request.get(dump.url)
+  // request.get(url)
     .on('response', function(res) {
       console.log("res.statusCode: ", res.statusCode);
       console.log("res.headers: ", res.headers['content-type']);
@@ -60,10 +60,10 @@ importAHDataFromBlizzard = (db, dump) => {
 // Add auctions to the database from a json file
 addAuctionsToDB = async (db, dumpId, file) => {
 
-  const tempDB = require("../../db/config/index.js");
+  // const tempDB = require("../../db/config/index.js");
 
-  // const jsonData = require(file);
-  const jsonData = require("../ahData/AHData_1530834639900.json");
+  const jsonData = require(file);
+  // const jsonData = require("../ahData/AHData_1530834639900.json");
   console.log("jsonData.realms: ", jsonData.realms);
   const auctions = jsonData.auctions;
   const auctionCount = 0;
@@ -80,7 +80,7 @@ addAuctionsToDB = async (db, dumpId, file) => {
   //   return null;
   // })
 
-  insertAuction(tempDB, dumpId, auctions, auctionCount, auctionLength);
+  insertAuction(db, dumpId, auctions, auctionCount, auctionLength);
 
   // let auction = auctions[0];
   // auctions.forEach(function(auction) {
@@ -151,13 +151,15 @@ insertAuction = (db, dumpId, auctions, auctionCount, auctionLength) => {
     // });
     // return promise;
     
+  } else {
+    console.log(`Auctions from dump ${dumpId} INSERTed`);
   }
 }
 
 
-// module.exports = importAHDataFromBlizzard;
+module.exports = importAHDataFromBlizzard;
 
-addAuctionsToDB("db", 1111111, "fakeFile");
+// addAuctionsToDB("db", 1111111, "fakeFile");
 
 
 

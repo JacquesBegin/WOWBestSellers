@@ -26,11 +26,9 @@ importAhDumpDataFromBlizzard = (db) => {
           .then((result) => {
             if (!result) {
               addDumpToDB(db, ahDump)
-                .then((result) => {
-                  // Call auctionDownloader to import all
-                  // auctions from current dump.
-                  // Result should be the new record for dump.
-                  // auctionDownloader(db, result);
+                .then((dump) => {
+                  // INSERT all new auctions to the database.
+                  auctionDownloader(db, dump);
                 })
                 .catch((err) => {
                   console.log("Dump not added to database: ", err);

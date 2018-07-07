@@ -9,7 +9,7 @@ const url = `https://us.api.battle.net/wow/auction/data/thrall?locale=en_US&apik
 // url to Blizzard API for Alterac Mountains server ah information 
 // const url = `https://us.api.battle.net/wow/auction/data/alterac%20mountains?locale=en_US&apikey=${process.env.API_KEY}`;
 
-importAhDumpData = (db) => {
+importAhDumpDataFromBlizzard = (db) => {
   request(
     {
       url: url,
@@ -29,6 +29,8 @@ importAhDumpData = (db) => {
                 .then((result) => {
                   // Call auctionDownloader to import all
                   // auctions from current dump.
+                  // Result should be the new record for dump.
+                  // auctionDownloader(db, result);
                 })
                 .catch((err) => {
                   console.log("Dump not added to database: ", err);
@@ -77,14 +79,16 @@ addDumpToDB = (db, dump) => {
     })
     .then((newDump) => {
       console.log(`Dump ${newDump.last_modified} (ID: ${newDump.id}) added to the database.`);
+      resolve(newDump);
     })
     .catch((err) => {
       console.log("Error during dump INSERT: ", err);
+      reject(err);
     });
-    resolve();
+    
   })
   return promise;
 }
  
 
-module.exports = importAhDumpData;
+module.exports = importAhDumpDataFromBlizzard;

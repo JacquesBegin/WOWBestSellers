@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       required: true
     },
     dump_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       required: true
     },
     item_id: {

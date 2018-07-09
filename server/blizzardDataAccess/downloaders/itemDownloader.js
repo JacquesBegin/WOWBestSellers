@@ -3,9 +3,11 @@ const request = require("request");
 require('dotenv').config();
 
 // Purpose of this file:
-// Check the database for an item, if it is not found
+// -Check the database for an item, if it is not found
 // in the database call the blizzard API to download
 // the item information and insert it into the database.
+// -Search auctions for items that are not already in the
+// items table and then import them into the table.
 
 
 // Requests item data from Blizzard and takes a callback 
@@ -59,7 +61,8 @@ addItemToDB = (db, item, success) => {
   });
 }
 
-
+// Takes an array of item id's and imports the item info
+// into the item table.
 importAndAddMultipleItems = (db, items, count, itemsLength) => {
   if (count < itemsLength) {
     downloadNewItemToDb(db, items[count].item_id)
@@ -103,7 +106,7 @@ retrieveItemFromDB = (db, itemId) => {
   return promise;
 }
 
-// Function to run itemDownloader functionality
+// Function to run single itemDownloader functionality
 downloadNewItemToDb = (db, itemId) => {
   let promise = new Promise(function(resolve, reject) {
     retrieveItemFromDB(db, itemId)
@@ -128,16 +131,10 @@ downloadNewItemToDb = (db, itemId) => {
 
 // Functionality to scan database auctions and add item 
 // information for items not already in the database.
+// Function to run itemDownloader functionality for multiple
+// item id's.
 itemScanner = (db) => {
   console.log("Item scanner started.")
-  // Query auction table for items not in the item table.
-  // Only retrieve 1 instance of each item from auctions.
-  // Restrict results to be a limited quantity (ex. 1000 items)
-  // db.auctions.findAll({
-  //   attributes: ["item_id"],
-  //   where: {},
-  //   limit: 1000
-  // })
   db.sequelize.query(`SELECT DISTINCT item_id FROM auctions WHERE 
                     item_id NOT IN (SELECT item_id FROM 
                     items) LIMIT 1000;`)
@@ -150,6 +147,9 @@ itemScanner = (db) => {
     });
 }
 
+// Function needed to remove duplicate rows in the items
+// table caused by initial functionality for downloading 
+// mulitple items.
 removeDuplicateItemsFromDB = (db) => {
   db.sequelize.query(`DELETE FROM items a USING items b
                       WHERE a.id < b.id AND a.item_id = 

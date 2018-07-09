@@ -10,36 +10,41 @@ const url = `https://us.api.battle.net/wow/auction/data/thrall?locale=en_US&apik
 // const url = `https://us.api.battle.net/wow/auction/data/alterac%20mountains?locale=en_US&apikey=${process.env.API_KEY}`;
 
 importAhDumpDataFromBlizzard = (db) => {
-  request(
-    {
-      url: url,
-      json: true
-    }, function (err, res, data) {
-      if (!err && res.statusCode === 200) {
-        console.log("firstbody:", data);
-
-        let ahDump = {};
-        ahDump.url = data.files[0].url;
-        ahDump.lastModified = data.files[0].lastModified;
-
-        checkIfDumpInDB(db, data.files[0].lastModified)
-          .then((result) => {
-            if (!result) {
-              addDumpToDB(db, ahDump)
-                .then((dump) => {
-                  // INSERT all new auctions to the database.
-                  auctionDownloader(db, dump);
-                })
-                .catch((err) => {
-                  console.log("Dump not added to database: ", err);
-                })
-            }
-          })
-      } else {
-        console.log("Error importing dump: ", err);
+  let promise = new Promise((resolve, reject) => {
+    request(
+      {
+        url: url,
+        json: true
+      }, function (err, res, data) {
+        if (!err && res.statusCode === 200) {
+          console.log("firstbody:", data);
+  
+          let ahDump = {};
+          ahDump.url = data.files[0].url;
+          ahDump.lastModified = data.files[0].lastModified;
+  
+          checkIfDumpInDB(db, data.files[0].lastModified)
+            .then((result) => {
+              if (!result) {
+                addDumpToDB(db, ahDump)
+                  .then((dump) => {
+                    // INSERT all new auctions to the database.
+                    // auctionDownloader(db, dump);
+                    resolve(dump);
+                  })
+                  .catch((err) => {
+                    console.log("Dump not added to database: ", err);
+                    reject(err);
+                  })
+              }
+            })
+        } else {
+          console.log("Error importing dump: ", err);
+        }
       }
-    }
-  );
+    );
+  });
+  return promise;
 }
 
 checkIfDumpInDB = (db, lastModified) => {

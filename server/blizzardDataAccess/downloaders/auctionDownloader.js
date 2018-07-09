@@ -56,7 +56,6 @@ addAuctionsToDB = (db, dumpId, file) => {
 insertAuctions = (db, dumpId, auctions, auctionCount, auctionLength, resolution) => {
   if (auctionCount < auctionLength) {
     let auction = auctions[auctionCount];
-    // let promise = new Promise((resolve, reject) => {
       db.auctions.create({
         dump_id: dumpId,
         auction_id: auction.auc,
@@ -89,8 +88,6 @@ insertAuctions = (db, dumpId, auctions, auctionCount, auctionLength, resolution)
         console.log("Error during auction INSERT: ", err);
         resolution.reject(err);
       });
-    // });
-    // return promise;
   } else {
     console.log(`Auctions from dump ${dumpId} INSERTed`);
     resolution.resolve(true);

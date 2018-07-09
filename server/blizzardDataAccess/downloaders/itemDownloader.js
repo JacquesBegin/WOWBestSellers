@@ -21,8 +21,12 @@ importItemDataFromBlizzard = (db, itemId, callback) => {
       }, function (err, res, data) {
         if (!err & res.statusCode === 200) {
           callback(db, data, resolve);
+        } else if (err) {
+          reject(`Error retrieving item from Blizzard: ERR: ${err}, RES: ${res}, DATA: ${data}, RESPONSECODE: ${res.statusCode} `);
         } else {
-          reject(`Error retrieving item from Blizzard: ERR: ${err}, RES: ${res}, DATA: ${data} `);
+          console.log(`statusCode: ${res.statusCode}, itemId: ${itemId}`);
+          importItemDataFromBlizzard(db, itemId, callback);
+          resolve();
         }
       }
     );
@@ -45,7 +49,7 @@ addItemToDB = (db, item, success) => {
     is_auctionable: item.isAuctionable
   })
   .then((newItem) => {
-    console.log(`Item ${newItem.name} (${newItem.item_id}) added to the database.`);
+    // console.log(`Item ${newItem.name} (${newItem.item_id}) added to the database.`);
     if (success) {
       success();
     }
@@ -57,15 +61,13 @@ addItemToDB = (db, item, success) => {
 
 
 importAndAddMultipleItems = (db, items, count, itemsLength) => {
-  console.log("itemsLength: ", itemsLength);
   if (count < itemsLength) {
-    console.log("items: ", items[count].item_id);
     downloadNewItemToDb(db, items[count].item_id)
       .then(() => {
         count++;
-        setTimeout(() => {
+        // setTimeout(() => {
           process.nextTick(() => {importAndAddMultipleItems(db, items, count, itemsLength)});
-        }, 1000);
+        // }, 1000);
       })
       .catch((err) => {
         console.log(err);
@@ -90,7 +92,7 @@ retrieveItemFromDB = (db, itemId) => {
         console.log("Item in database.");
         resolve(true);
       } else {
-        console.log("Item not in database.");
+        // console.log("Item not in database.");
         resolve(false);
       }
     })
@@ -127,6 +129,7 @@ downloadNewItemToDb = (db, itemId) => {
 // Functionality to scan database auctions and add item 
 // information for items not already in the database.
 itemScanner = (db) => {
+  console.log("Item scanner started.")
   // Query auction table for items not in the item table.
   // Only retrieve 1 instance of each item from auctions.
   // Restrict results to be a limited quantity (ex. 1000 items)
@@ -139,8 +142,7 @@ itemScanner = (db) => {
                     item_id NOT IN (SELECT item_id FROM 
                     items) LIMIT 1000;`)
     .then((items) => {
-      console.log("items after query: ", items[0]);
-      importAndAddMultipleItems(db, items[0], 0, items[0].length);
+      process.nextTick(() => {importAndAddMultipleItems(db, items[0], 0, items[0].length)});
     })
     .catch((err) => {
       console.log(`Error retrieving item list to import 

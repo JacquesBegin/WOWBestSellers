@@ -108,7 +108,7 @@ retrieveItemFromDB = (db, itemId) => {
 
 // Function to run single itemDownloader functionality
 downloadNewItemToDb = (db, itemId) => {
-  let promise = new Promise(function(resolve, reject) {
+  let promise = new Promise((resolve, reject) => {
     retrieveItemFromDB(db, itemId)
       .then((result) => {
         if(!result) {

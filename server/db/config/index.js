@@ -10,7 +10,8 @@ const sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, proc
     min: 0,
     acquire: 30000,
     idle: 10000
-  }
+  },
+  logging: false
 });
 
 const db = {};

@@ -83,7 +83,7 @@ insertAuctions = (db, dumpId, auctions, auctionCount, auctionLength, resolution)
         // Using process.nextTick() locks the application
         // causing any I/O process to wait until after 
         // the last process.nextTick() is finished.
-        process.nextTick(() => {insertAuctions(db, dumpId, auctions, auctionCount, auctionLength)});
+        process.nextTick(() => {insertAuctions(db, dumpId, auctions, auctionCount, auctionLength, resolution)});
       })
       .catch((err) => {
         console.log("Error during auction INSERT: ", err);

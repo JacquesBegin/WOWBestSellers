@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 const db = require("./db/config/index");
 const auctionRoutes = require("./routes/auctionRoutes")(db);
-const blizzardDownloader = require("./blizzardDataAccess/index")(db);
+const blizzardDownloader = require("./blizzardDataAccess/index");
 
 const app = express();
 const PORT = 8884;
@@ -22,13 +22,15 @@ initializeRoutes = () => {
 }
 
 startBlizzardDownloader = () => {
-  blizzardDownloader.downloadDump();
+  // blizzardDownloader.downloadDump(db);
+  blizzardDownloader.importNewItems(db);
 }
 
 startAppServer = () => {
   var server = app.listen(process.env.PORT || PORT, () => {
     var port = server.address().port;
     console.log(`App server running on port ${port}`);
+    startBlizzardDownloader();
   });
 }
 
@@ -38,7 +40,6 @@ db.sequelize.authenticate()
     console.log("Connected to the database.");
     initializeRoutes();
     startAppServer();
-    startBlizzardDownloader();
   })
   .catch(err => {
     console.error("Unable to connect to database: ", err);

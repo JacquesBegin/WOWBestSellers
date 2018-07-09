@@ -22,6 +22,12 @@ initializeRoutes = () => {
 }
 
 startBlizzardDownloader = () => {
+  // NEXT STEP IS TO INCORPORATE THE AUTOMATION FOR
+  // RETRIEVING DUMPS, DOWNLOADING AUCTIONS, AND UPDATING
+  // THE ITEM TABLE. THESE THREE STEPS SHOULD BE RUN
+  // IN A CYCLIC MANNER AND THE NEXT STEP SHOULD NOT START
+  // UNTIL THE PREVIOUS STEP IS COMPLETED.
+
   // blizzardDownloader.downloadDump(db);
   blizzardDownloader.importNewItems(db);
 }

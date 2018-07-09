@@ -29,7 +29,8 @@ startBlizzardDownloader = () => {
   // UNTIL THE PREVIOUS STEP IS COMPLETED.
 
   // blizzardDownloader.downloadDump(db);
-  blizzardDownloader.importNewItems(db);
+  // blizzardDownloader.importNewItems(db);
+  blizzardDownloader.runDataImportAutomation(db);
 }
 
 startAppServer = () => {

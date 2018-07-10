@@ -98,11 +98,17 @@ runAuctionDownloader = (db, dump) => {
   let promise = new Promise((resolve, reject) => {
     importAHDataFromBlizzard(db, dump)
     .then((result) => {
-      addAuctionsToDB(result.db, result.dumpId, result.filename);
-    })
-    .then((result) => {
-      console.log(`Done adding auctions: ###${result}###`);
-      resolve(true);
+      // TODO: The following promise may not be implemented
+      // correctly. I'm trying to string together .then's
+      // but not sure how to do it yet.
+      addAuctionsToDB(result.db, result.dumpId, result.filename)
+        .then((result) => {
+          console.log(`Done adding auctions: ###${result}###`);
+          resolve(true);
+        })
+        .catch((err) => {
+          console.log(`Error running auction downloader after addAuctionsToDB: ${err}`);
+        });
     })
     .catch((err) => {
       console.log("Error running auction downloader: ", err);

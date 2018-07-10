@@ -36,6 +36,11 @@ importAhDumpDataFromBlizzard = (db) => {
                     console.log("Dump not added to database: ", err);
                     reject(err);
                   })
+              } else {
+                // TODO: Figure out the best way to restart the
+                // process to check for new dumps. Also add 
+                // this restart to the end of the full
+                // process (after itemDownloader runs).
               }
             })
         } else {

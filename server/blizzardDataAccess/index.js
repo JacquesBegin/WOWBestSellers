@@ -9,11 +9,22 @@ module.exports = {
   runDataImportAutomation: function(db) {
                             ahDumpDownloader(db)
                               .then((dump) => {
-                                return auctionDownloader.runAuctionDownloader(db, dump)
+                                if (/* if return value claims the dump in already downloaded
+                                restart the runDataImportAutomation process after a set
+                                amount of time. */  /*change this true -->*/ true) {
+                                  return auctionDownloader.runAuctionDownloader(db, dump)
+                                } else {
+
+                                }
+                                
                               })
-                              .then((result) => {
+                              .then(() => {
                                 console.log("In index, running automation, ready to start item download.");
-                                itemDownloader.itemScanner(db);
+                                return itemDownloader.itemScanner(db);
+                              })
+                              .then(() => {
+                                console.log(`In runDataImportAutomation repeat .then. Ready to restart the full download promise.`);
+                                process.nextTick(() => {this.runDataImportAutomation(db);})
                               })
                               .catch((err) => {
                                 console.log("Error during automation: ", err);

@@ -9,7 +9,7 @@ module.exports = {
   runDataImportAutomation: function(db) {
                             ahDumpDownloader(db)
                               .then((dump) => {
-                                if (/* if return value claims the dump in already downloaded
+                                if (/* TODO: if return value claims the dump in already downloaded
                                 restart the runDataImportAutomation process after a set
                                 amount of time. */  /*change this true -->*/ true) {
                                   return auctionDownloader.runAuctionDownloader(db, dump)

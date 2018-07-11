@@ -63,20 +63,22 @@ addItemToDB = (db, item, success) => {
 
 // Takes an array of item id's and imports the item info
 // into the item table.
-importAndAddMultipleItems = (db, items, count, itemsLength) => {
+importAndAddMultipleItems = (db, items, count, itemsLength, resolution) => {
   if (count < itemsLength) {
     downloadNewItemToDb(db, items[count].item_id)
       .then(() => {
         count++;
         // setTimeout(() => {
-          process.nextTick(() => {importAndAddMultipleItems(db, items, count, itemsLength)});
+          process.nextTick(() => {importAndAddMultipleItems(db, items, count, itemsLength, resolution)});
         // }, 1000);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Error in importAndAddMultipleItems: ", err);
+        resolution.reject(err);
       })
   } else {
     console.log(`Finished importing all items.`);
+    resolution.resolve();
   }
 }
 
@@ -134,17 +136,21 @@ downloadNewItemToDb = (db, itemId) => {
 // Function to run itemDownloader functionality for multiple
 // item id's.
 itemScanner = (db) => {
-  console.log("Item scanner started.")
-  db.sequelize.query(`SELECT DISTINCT item_id FROM auctions WHERE 
-                    item_id NOT IN (SELECT item_id FROM 
-                    items) LIMIT 1000;`)
-    .then((items) => {
-      process.nextTick(() => {importAndAddMultipleItems(db, items[0], 0, items[0].length)});
-    })
-    .catch((err) => {
-      console.log(`Error retrieving item list to import 
-      into database`);
-    });
+  let promise = new Promise((resolve, reject) => {
+    console.log("Item scanner started.")
+    db.sequelize.query(`SELECT DISTINCT item_id FROM auctions WHERE 
+                      item_id NOT IN (SELECT item_id FROM 
+                      items) LIMIT 1000;`)
+      .then((items) => {
+        process.nextTick(() => {importAndAddMultipleItems(db, items[0], 0, items[0].length), {resolve: resolve, reject: reject}});
+      })
+      .catch((err) => {
+        console.log(`Error retrieving item list to import 
+        into database`);
+        reject(err);
+      });
+  });
+  return promise;
 }
 
 // Function needed to remove duplicate rows in the items
